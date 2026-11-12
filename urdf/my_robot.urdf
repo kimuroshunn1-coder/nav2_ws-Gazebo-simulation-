@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <material name="orange">
+    <color rgba="0.8 0.4 0.0 1.0"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0 0 0 1.0"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1.0"/>
+  </material>
+  <!-- Base Link -->
+  <link name="chassis">
+   <collision>
+    <origin xyz="0 0 0.07" rpy="0 0 0"/>
+    <geometry><box size="0.3 0.2 0.1"/></geometry>
+   </collision>
+   <inertial>
+    <origin xyz="0 0 0.07" rpy="0 0 0"/>
+    <mass value="1.0"/>
+    <inertia ixx="0.004167" ixy="0" ixz="0" iyy="0.008333" iyz="0" izz="0.010833"/>
+   </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+     
+      <geometry>
+        <mesh
+          filename="package://my_robot_sim/meshes/body2.stl"
+          scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <origin xyz="0.05 0.11 0.04" rpy="-1.5707 0 0"/>
+    <parent link="chassis"/>
+    <child link="left_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.2"/>
+  </joint>
+
+  <!-- left wheel Link -->
+  <link name="left_wheel">
+    <collision>
+      <geometry>
+        <sphere radius="0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <sphere radius="0.1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <mass value="2"/>
+      <inertia ixx="0.145833"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="0.145833"
+               iyz="0.0"
+               izz="0.125"/>
+    </inertial>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <origin xyz="0.05 -0.11 0.04" rpy="-1.5707 0 0"/>
+    <parent link="chassis"/>
+    <child link="right_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.2"/>
+  </joint>
+
+  <!-- right wheel Link -->
+  <link name="right_wheel">
+    <collision>
+      <geometry>
+        <sphere radius="0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <sphere radius="0.1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <mass value="2"/>
+      <inertia ixx="0.145833"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="0.145833"
+               iyz="0.0"
+               izz="0.125"/>
+      </inertial>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <origin xyz="-0.12 0 0.04" rpy="0 0 0"/>
+    <parent link="chassis"/>
+    <child link="caster"/>
+  </joint>
+
+  <!-- caster frontal wheel Link -->
+  <link name="caster">
+    <collision>
+      <geometry>
+        <sphere radius="0.08"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <sphere radius="0.08"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="-0.957138 -0 0.2" rpy="0 0 0"/>
+      <mass value="0.005"/>
+      <inertia
+        ixx="0.1"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.1"
+        iyz="0.0"
+        izz="0.1"/>
+    </inertial>
+  </link>
+
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+       <parameters>/home/kimuro/nav2_ws/install/my_robot_sim/share/my_robot_sim/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+</robot>
