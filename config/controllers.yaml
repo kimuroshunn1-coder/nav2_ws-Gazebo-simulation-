@@ -1,33 +1,23 @@
 controller_manager:
   ros__parameters:
-
     update_rate: 100
+    use_sim_time: true
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    diff_drive_controller:
-      type: diff_drive_controller/DiffDriveController
+    steer_controller:
+      type: forward_command_controller/ForwardCommandController
 
-diff_drive_controller:
+    wheel_controller:
+      type: forward_command_controller/ForwardCommandController
+
+steer_controller:
   ros__parameters:
+    joints: [steer_fl_joint, steer_fr_joint, steer_rr_joint]
+    interface_name: position
 
-    left_wheel_names:
-      - left_wheel_joint
-
-    right_wheel_names:
-      - right_wheel_joint
-
-    wheel_separation: 0.22
-
-    wheel_radius: 0.04
-
-    publish_rate: 50.0
-
-    base_frame_id: base_link
-
-    odom_frame_id: odom
-
-    enable_odom_tf: true
-
-    use_stamped_vel: false
+wheel_controller:
+  ros__parameters:
+    joints: [wheel_fl_joint, wheel_fr_joint, wheel_rr_joint]
+    interface_name: velocity

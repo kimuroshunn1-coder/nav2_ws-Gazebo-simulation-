@@ -1,0 +1,14 @@
+# 計測輪オドメトリ共通パラメータ(シミュレーションと実機で同じ値を使う)
+wheel_odometry:
+  ros__parameters:
+    use_sim_time: true
+    wheel_diameter: 0.058
+    counts_per_rev: 4096.0  #encorder
+    signs: [1.0, 1.0, 1.0]
+
+sim_encoders:
+  ros__parameters:
+    use_sim_time: true
+    wheel_diameter: 0.058
+    counts_per_rev: 4096.0     # wheel_odometry =
+    scale_noise_std: 0.002

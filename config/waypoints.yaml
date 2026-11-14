@@ -1,0 +1,12 @@
+# ウェイポイント(座標は下の coordinate で指定)
+#   world: Gazebo世界の座標。スポーン位置(spawn)を基準に map 座標へ自動変換する
+#   map  : そのまま map 座標(地図作成の開始位置が原点)
+coordinate: world
+spawn: {x: -5.0, y: -5.0, yaw_deg: 90.0}   # launchの -x -y -Y と同じ値
+
+# 【例】実際のフィールドに合わせて書き換えること
+waypoints:
+  - {x: -5.0, y: -3.0, yaw_deg: 90.0}
+  - {x: -3.0, y: -3.0, yaw_deg: 0.0}
+  - {x: -3.0, y: -5.0, yaw_deg: -90.0}
+  - {x: -5.0, y: -5.0, yaw_deg: 90.0}
