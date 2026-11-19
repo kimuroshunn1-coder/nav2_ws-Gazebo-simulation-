@@ -139,5 +139,4 @@ def generate_launch_description():
         imu_average,
         madgwick,
         ekf,
-        groot2,
     ])

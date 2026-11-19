@@ -1,12 +1,14 @@
-"""Nav2(地図 + AMCL + MPPI)+ RViz。sim.launch.py を起動したあとに、別ターミナルで実行する。
-  ros2 launch my_robot_sim nav2.launch.py
-  ros2 launch my_robot_sim nav2.launch.py rviz:=false
-  ros2 launch my_robot_sim nav2.launch.py rviz_gpu:=false   # RVizをCPU描画にする"""
+"""Nav2(地図 + AMCL + MPPI)。sim.launch.py を起動したあとに、別ターミナルで実行する。
+  ros2 launch my_robot_sim nav2.launch.py                        # RVizなし。起動と同時に waypoints.yaml を巡る
+  ros2 launch my_robot_sim nav2.launch.py follow:=false          # Nav2だけ起動(BTなど、別の仕組みから走らせるとき)
+  ros2 launch my_robot_sim nav2.launch.py follow_file:=<yaml>    # 巡るファイルを変える
+  ros2 launch my_robot_sim nav2.launch.py rviz:=true             # RVizを出す(rviz_gpu:=false でCPU描画)"""
 import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -26,14 +28,16 @@ def generate_launch_description():
             'autostart': 'true',
         }.items())
 
-    #waypoint
+    # ウェイポイントを巡る。BTなど別の仕組みから走らせるときは follow:=false にする(二重に走らせない)
     waypoint_runner = Node(
         package='my_robot_sim',
         executable='follow_waypoints.py',
         name='follow_waypoints',
+        arguments=['--file', LaunchConfiguration('follow_file')],
         parameters=[{'use_sim_time': True}],
+        condition=IfCondition(LaunchConfiguration('follow')),
         output='screen'
-       )
+    )
 
     # RVizだけGPU描画にする(環境変数をこのプロセスにだけ渡す)。ちらつく・表示が崩れるときは rviz_gpu:=false
     def make_rviz(context, *args, **kwargs):
@@ -54,6 +58,9 @@ def generate_launch_description():
             'map', default_value=os.path.join(pkg_share, 'maps', 'field_map.yaml')),
         DeclareLaunchArgument('rviz', default_value='false'),
         DeclareLaunchArgument('rviz_gpu', default_value='true'),
+        DeclareLaunchArgument('follow', default_value='true'),
+        DeclareLaunchArgument(
+            'follow_file', default_value=os.path.join(pkg_share, 'config', 'waypoints.yaml')),
         bringup,
         waypoint_runner,
         OpaqueFunction(function=make_rviz),

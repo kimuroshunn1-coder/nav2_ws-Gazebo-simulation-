@@ -14,6 +14,7 @@ install(PROGRAMS
   scripts/odom_check.py
   scripts/follow_waypoints.py
   scripts/simple_waypoints.py
+  scripts/set_initial_pose.py
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

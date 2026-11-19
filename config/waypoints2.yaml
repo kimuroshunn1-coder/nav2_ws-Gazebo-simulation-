@@ -1,0 +1,10 @@
+# waypoints.yaml の 5, 2, 3, 4, 5 番目のポイントを、この順に巡る(階段ノードのあとに Nav2 で走らせる用)
+coordinate: world
+spawn: {x: -5.0, y: -5.0, yaw_deg: 0.0}   # sim.launch.py の -x -y -Y と同じ値
+
+waypoints:
+  - {x:  3.0, y: -6.5, yaw_deg: 180.0}    # 元の 5 番
+  - {x:  4.4, y: -5.0, yaw_deg: 0.0}      # 元の 2 番
+  - {x:  4.4, y: -6.0, yaw_deg: 0.0}      # 元の 3 番
+  - {x: -1.2, y: -5.9, yaw_deg: 270.0}    # 元の 4 番
+  - {x:  3.0, y: -6.5, yaw_deg: 180.0}    # 元の 5 番(最後にもう一度)
